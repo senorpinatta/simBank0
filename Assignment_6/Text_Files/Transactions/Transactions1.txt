@@ -1,0 +1,7 @@
+login
+agent
+create
+12345678
+Big Donkey Dick
+logout
+Terminate
