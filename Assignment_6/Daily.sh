@@ -1,23 +1,26 @@
 #!/bin/bash
 WEEK_DIR=$1
 DAY_NUM=$2
+VAF_NAME=$3
+MAF_NAME= $4
 DAY_DIR=${WEEK_DIR}/DAY_${DAY_NUM}
-TRANS_FILE=Text_Files/Transactions/Transactions1.txt
+TSF_DIR=${DAY_DIR}/TSFs
+MERGED_TSF=${DAY_DIR}/MergedTSF_${DAY_NUM}
 mkdir $DAY_DIR
-mkdir ${DAY_DIR}/TSFs
+mkdir $TSF_DIR
 
+# Run the three front end sessions
+FRONT_END_NUM=1
+while (( $FRONT_END_NUM <= 3 ))
+do	
+    TRANS_FILE=Text_Files/Transactions/Transactions${FRONT_END_NUM}.txt
+    java -classpath FrontEnd FrontEndStartPoint $VAF_NAME TSF.txt < $TRANS_FILE 
+    cp TSF.txt $TSF_DIR/TSF_${FRONT_END_NUM}.txt
+    cat $TSF_DIR/TSF_${FRONT_END_NUM}.txt >> $MERGED_TSF
+    ((FRONT_END_NUM++))
+done
 
-echo "TSF: TSF.txt"
-echo "VAF: EmptyValidAccounts.txt"
-echo ${TRANS_FILE}
-java -classpath FrontEnd FrontEndStartPoint EmptyValidAccounts.txt TSF.txt < "$TRANS_FILE"
-
-
-# makes a new Day folder
-# makes a new TSFs folder
-# run the front end on one of the sample sessions and saves the output to the TSFs folder
-# merge the TSFs and save them to MergedTSF.txt
-# run the back end the Weeks MAF and the Day's MTSF overwrites the weeks MasterAccounts.txt and ValidAccounts 
+java -classpath BackEnd BackEndStartPoint $MAF_NAME $VAF_NAME $MERGED_TSF
 
 
 echo "Daily script ${DAY_NUM} is done"

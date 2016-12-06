@@ -11,11 +11,14 @@ import java.util.Scanner;
 public class LoggedInState extends CommandManager {
     protected ArrayList<String> validAccounts;
     private ArrayList<String> mastTrans;
+    // Where we get the input opened by FrontEnd.
+    protected Scanner keyboard;
 
     //The default constructor for the LoggedInState class. Takes, in order, the temporary
-    //transactions list, the valid accounts list, and the master transactions list.
-    public LoggedInState(ArrayList<String> transactions, ArrayList<String> validAccounts, ArrayList<String> masterTransactions) {
+    //transactions list, the valid accounts list, and the master transactions list and the Scanner keyboard.
+    public LoggedInState(ArrayList<String> transactions, ArrayList<String> validAccounts, ArrayList<String> masterTransactions, Scanner keyboard) {
         super(transactions);
+        this.keyboard = keyboard;
         this.validAccounts = validAccounts;
         this.mastTrans = masterTransactions;
     }
@@ -56,7 +59,6 @@ public class LoggedInState extends CommandManager {
     //for validity, immediately returning 0 if invalid. If the checks are passed the appropriate
     //transaction code is written to the temporary transaction file, before returning 0.
     protected int deposit(int lowerBound, int upperBound) {
-        Scanner keyboard = new Scanner(System.in);
         String line;
         int total = 0;
         int accountNumber = 0;
@@ -74,7 +76,7 @@ public class LoggedInState extends CommandManager {
             System.out.printf(format, "Enter amount in cents");
             line = keyboard.nextLine();
             amount = Integer.parseInt(line);
-            total = transactionSum(String.format("%d", accountNumber), "DE", upperBound) + amount;
+            total = singleAccountSum(String.format("%d", accountNumber), "DE", upperBound) + amount;
             if (total < lowerBound || total > upperBound) {
                 System.out.printf("Error total amount is not in [%d, %d]\n", lowerBound, upperBound);
                 return 0;
@@ -83,7 +85,7 @@ public class LoggedInState extends CommandManager {
             System.out.println("Error");
             return 0;
         }
-        transactions.add(String.format("DE %d 00000000 000 %d ***", accountNumber, amount));
+        transactions.add(String.format("DE %d 00000000 %d ***", accountNumber, amount));
         return 0;
     }
 
@@ -92,7 +94,6 @@ public class LoggedInState extends CommandManager {
     //for validity, immediately returning 0 if invalid. If the checks are passed the appropriate
     //transaction code is written to the temporary transaction file, before returning 0.
     protected int withdraw(int lowerBound, int upperBound) {
-        Scanner keyboard = new Scanner(System.in);
         String line;
         int total = 0;
         int accountNumber = 0;
@@ -101,7 +102,7 @@ public class LoggedInState extends CommandManager {
             System.out.printf(format, "Enter account Number");
             line = keyboard.nextLine();
 
-            if (accountCheck(line) || ! accountDeleted(line)) {
+            if (accountCheck(line) && ! accountDeleted(line)) {
                 accountNumber = Integer.parseInt(line);
             }
             else {
@@ -111,7 +112,7 @@ public class LoggedInState extends CommandManager {
             System.out.printf(format, "Enter amount in cents");
             line = keyboard.nextLine();
             amount = Integer.parseInt(line);
-            total = transactionSum(String.format("%d", accountNumber), "WD", upperBound) + amount;
+            total = singleAccountSum(String.format("%d", accountNumber), "WD", upperBound) + amount;
             if (total < lowerBound || total > upperBound) {
                 System.out.printf("total amount is not in [%d, %d]\n", lowerBound, upperBound);
                 return 0;
@@ -119,7 +120,7 @@ public class LoggedInState extends CommandManager {
         } catch (NumberFormatException e) {
             return 0;
         }
-        transactions.add(String.format("WD %d 00000000 000 %d ***", accountNumber, amount));
+        transactions.add(String.format("WD %d 00000000 %d ***", accountNumber, amount));
         return 0;
     }
 
@@ -129,7 +130,6 @@ public class LoggedInState extends CommandManager {
     //for validity, immediately returning 0 if invalid. If the checks are passed the appropriate
     //transaction code is written to the temporary transaction file, before returning 0.
     protected int transfer(int lowerBound, int upperBound) {
-        Scanner keyboard = new Scanner(System.in);
         boolean flag = true;
         String line;
         int total = 0;
@@ -162,19 +162,16 @@ public class LoggedInState extends CommandManager {
             System.out.printf(format, "Enter amount in cents");
             line = keyboard.nextLine();
             amount = Integer.parseInt(line);
-
-            total = transactionSum(String.format("%d", accountNumberFrom), "WD", upperBound) + amount;
+            total = singleAccountSum(String.format("%d", accountNumberFrom), "WD", upperBound) + amount;
+            total += sumTransfersOutOf(String.format("%d", accountNumberFrom), "TR", upperBound);
             if (total < lowerBound || total > upperBound) {
                 System.out.printf("Error total amount is not in [%d, %d]\n", lowerBound, upperBound);
                 return 0;
             }
-
-            total = transactionSum(String.format("%d", accountNumberTo), "DE", upperBound) + amount;
-            if (total < lowerBound || total > upperBound) {
-                System.out.printf("Error total amount is not in [%d, %d]\n", lowerBound, upperBound);
+            total = singleAccountSum(String.format("%d", accountNumberTo), "DE", upperBound) + amount;
+            total += sumTransfersInto(String.format("%d", accountNumberTo), "TR", upperBound);
+            if (total < lowerBound || total > upperBound)
                 return 0;
-            }
-
         } catch (NumberFormatException e) {
             System.out.println("Error");
             return 0;
@@ -183,16 +180,38 @@ public class LoggedInState extends CommandManager {
         return 0;
     }
 
+    private int sumTransfersInto(String accNum, String transType, int upperBound) {
+        return sumTransfers(accNum, transType, upperBound, 2);
+    }
+
+    private int sumTransfersOutOf(String accNum, String transType, int upperBound) {
+        return sumTransfers(accNum, transType, upperBound, 1);
+    }
+
+    private int sumTransfers(String accNum, String transType, int upperBound, int index) {
+        int sum = 0;
+        if (upperBound == 99999999)
+            return 0;
+        else {
+            sum += sumList(transactions, accNum, transType, index);
+            sum += sumList(mastTrans, accNum, transType, index);
+        }
+        return sum;
+    }
+
+
     //Called from transactionSum method. This method reads/parses the strings stored in a
     //transactions list to obtain the total amount that has been deposited/withdrawn from an account
     //in a session.
-    private int sumList(ArrayList<String> trans, String accNum, String transType) {
+    private int sumList(ArrayList<String> trans, String accNum, String transType, int index) {
         int sum = 0;
         String[] parts;
         for (String line :  trans) {
             parts = line.split(" ");
-            if (accNum.equals(parts[1]) && transType.equals(parts[0]))
+            if (accNum.equals(parts[index]) && transType.equals(parts[0])) {
                 sum += Integer.parseInt(parts[3]);
+//				System.out.printf("match index: %d parts[index]: %s parts[0]: %s accNum %s transType: %s\n", index, parts[index], ); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            }
         }
         return sum;
     }
@@ -202,13 +221,13 @@ public class LoggedInState extends CommandManager {
     //an agent, it returns 0 to allow the transaction to continue. If the user is an agent,
     //It calls sumList to read the temporary & master transactions list and return the total
     //amount that would be deposited/withdrawn if this transaction continues.
-    private int transactionSum(String accNum, String transType, int upperBound) {
+    private int singleAccountSum(String accNum, String transType, int upperBound) {
         int sum = 0;
         if (upperBound == 99999999)
             return 0;
         else {
-            sum += sumList(transactions, accNum, transType);
-            sum += sumList(mastTrans, accNum, transType);
+            sum += sumList(transactions, accNum, transType, 1);
+            sum += sumList(mastTrans, accNum, transType, 1);
         }
         return sum;
     }
@@ -216,16 +235,18 @@ public class LoggedInState extends CommandManager {
     // This method checks both the masterTransactions list and the temporaryTransactions List for a delete operation on the supplied account number
     private boolean accountDeleted(String accountNum) {
         return deletedCheckList(accountNum, mastTrans) || deletedCheckList(accountNum, transactions);
+
     }
     // This method checks a list for any lines with have deleted an account with the supplied account number
     private boolean deletedCheckList(String accountNum, ArrayList<String> list) {
         String[] parts;
         for (String line : list) {
             parts = line.split(" ");
-            if (parts[0] == "DL")
+            if (parts[0].equals("DL"))
                 if (parts[1].equals(accountNum))
                     return true;
         }
         return false;
     }
+
 }

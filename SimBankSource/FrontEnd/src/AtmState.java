@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+import java.util.Scanner;
 /**
  * Created by benji on 10/18/2016.
  *
@@ -16,8 +16,8 @@ public class AtmState extends LoggedInState {
 
     //Default Constructor of the AtmState class. Uses super to call the constructor of
     //the parent class, enabling late binding.
-    public AtmState(ArrayList<String> transactions, ArrayList<String> validAccounts, ArrayList<String> masterTransactions) {
-        super(transactions, validAccounts, masterTransactions);
+    public AtmState(ArrayList<String> transactions, ArrayList<String> validAccounts, ArrayList<String> masterTransactions, Scanner keyboard) {
+        super(transactions, validAccounts, masterTransactions, keyboard);
     }
 
     //"Handles" user input. If input equals one of the available functions, that function
@@ -30,9 +30,11 @@ public class AtmState extends LoggedInState {
         if(line.equals("deposit"))
             stateIndex = deposit(LOWER, UPPER);
         if(line.equals("withdraw"))
-            stateIndex = deposit(LOWER, UPPER);
+            stateIndex = withdraw(LOWER, UPPER);
         if(line.equals("transfer"))
-            stateIndex = deposit(LOWER, UPPER);
+            stateIndex = transfer(LOWER, UPPER);
+        if(line.equals("create") || line.equals("delete"))
+            System.out.println("Error");
 
         return stateIndex;
     }

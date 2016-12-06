@@ -10,8 +10,7 @@ import java.util.ArrayList;
 public class LoggedOutState extends CommandManager {
 
     //Default Constructor for the LoggedOutState Class
-    public LoggedOutState(ArrayList<String> transactions) {
-        super(transactions);
+    public LoggedOutState(ArrayList<String> transactions) { super(transactions);
     }
 
     //"Handles" user input. The only accepted input when in this object is the login method.

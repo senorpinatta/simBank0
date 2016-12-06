@@ -16,8 +16,8 @@ public class AgentState extends LoggedInState {
 
     //Default Constructor of the AgentState class. Uses super to call the constructor of
     //the parent class, enabling late binding.
-    public AgentState(ArrayList<String> transactions, ArrayList<String> validAccounts, ArrayList<String> masterTransactions) {
-        super(transactions, validAccounts, masterTransactions);
+    public AgentState(ArrayList<String> transactions, ArrayList<String> validAccounts, ArrayList<String> masterTransactions, Scanner keyboard) {
+        super(transactions, validAccounts, masterTransactions, keyboard);
     }
 
 
@@ -65,7 +65,6 @@ public class AgentState extends LoggedInState {
     //number does not already exist and includes if clauses that ensure the parameters
     //supplied are valid.
     public int create() {
-        Scanner keyboard = new Scanner(System.in);
         boolean flag = true;
         String line;
         int accountNumber = 0;
@@ -74,8 +73,10 @@ public class AgentState extends LoggedInState {
             try {
                 System.out.println("Enter the account Number: ");
                 line = keyboard.nextLine();
+                System.out.printf("You entered: %s ", line);
                 if (!accountCheck(line)) {
-                    if(line.length() == 8) {
+                    System.out.println("Account is valid");
+                    if(line.length() == 8 && line.charAt(0) != '0') {
                         accountNumber = Integer.parseInt(line);
                     }
                     else {
@@ -84,31 +85,35 @@ public class AgentState extends LoggedInState {
                     }
                 }
                 else {
-                    System.out.println("Error");
+                    System.out.println("Error: Account Already Exists");
                     return 0;
                 }
+                System.out.println("Enter the account Name: ");
                 line = keyboard.nextLine();
                 if (isValidName(line))
                     name = line;
+                else {
+                    System.out.println("Error");
+                    return 0;
+                }
                 flag = false;
             } catch (NumberFormatException e) {
-                // do nothing one of the inputs was bad
+                System.out.println("Error");
                 return 0;
             }
         }
         transactions.add(String.format("CR %d 00000000 000 %s", accountNumber, name));
         // end session because of spec. of create see lecture 5 in CISC 327 notes
         // "No new transactions should be accepted in this session
-        return 4;
+        return 0;
     }
 
 
     //Unique to the agent state, the delete method takes two parameters, an account number
-    //and name, and "deletes" or removes an existing account from the accounts file. This 
-    //function calls the accountCheck method found in the parent class to check that the 
+    //and name, and "deletes" or removes an existing account from the accounts file. This
+    //function calls the accountCheck method found in the parent class to check that the
     //account number exists and includes if clauses that check that the name supplied is valid.
     public int delete() {
-        Scanner keyboard = new Scanner(System.in);
         boolean flag = true;
         String line;
         int accountNumber = 0;
@@ -124,9 +129,14 @@ public class AgentState extends LoggedInState {
                     System.out.println("Error");
                     return 0;
                 }
+                System.out.println("Enter the account Name: ");
                 line = keyboard.nextLine();
                 if (isValidName(line))
                     name = line;
+                else {
+                    System.out.println("Error");
+                    return 0;
+                }
                 flag = false;
             } catch (NumberFormatException e) {
                 // do nothing one of the inputs was bad
@@ -140,14 +150,11 @@ public class AgentState extends LoggedInState {
     private boolean isValidName(String name) {
         if (name.length() <= 30                      &&
                 name.length() >= 3                       &&
-                name.matches("[A-Za-z0-9]+")             &&
-                name.substring(name.length() - 1) != " " &&
-                String.valueOf(name.charAt(0)) != " "
-                )
+                name.matches("[A-Za-z0-9 ]+")            &&
+                name.charAt(0) != ' '                    &&
+                name.charAt(name.length() - 1) != ' ')
             return true;
-        else {
-            System.out.println("Error");
+        else
             return false;
-        }
     }
 }

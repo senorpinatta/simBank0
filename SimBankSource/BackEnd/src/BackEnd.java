@@ -29,15 +29,14 @@ public class BackEnd {
     //For line in TSF, checks that all fields are legal, and that the transaction is valid.
     //If both conditions are met it performs the operation.
     //Writes results of completed transactions to new_ + masterAccFileName and the list of valid accounts to validAccountsFileName
-    public BackEnd(String masterAccFileName, String validAccountsFileName, String[] mergedTSFileNames) {
+    public BackEnd(String masterAccFileName, String validAccountsFileName, String mergedTSFileName) {
         // coverage part
         statementCounter = new int[STATEMENT_NUM];
         // end of coverage part
         masterAccName = masterAccFileName;
         validAccountsName = validAccountsFileName;
         transactions = new ArrayList<>();
-        for (String mergedTSFName : mergedTSFileNames)
-            readIntoArray(mergedTSFName, transactions);
+        readIntoArray(mergedTSFileName, transactions);
         masterAccountsList = readIntoArray(masterAccFileName);
         String[] parts;
         try {

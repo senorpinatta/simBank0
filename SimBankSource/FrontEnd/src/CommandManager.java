@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by benji on 10/18/2016.
@@ -7,8 +8,11 @@ import java.util.ArrayList;
  **/
 public abstract class CommandManager {
     protected ArrayList<String> transactions;
-    public static final int spacing = 21;
-    public static final String format = "%" + spacing + "s -> ";
+    protected static final int spacing = 21;
+    protected final String format = "%" + spacing + "s -> \n";
+    protected String prompt;
+    protected Scanner keyboard;
+
 
     // Default Constructor for the CommandManagerClass
     public CommandManager(ArrayList<String> transactions) {

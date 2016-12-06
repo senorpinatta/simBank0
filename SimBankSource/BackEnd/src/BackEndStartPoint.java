@@ -8,9 +8,8 @@
  */
 public class BackEndStartPoint {
     public static void main(String[] args) {
-        String[] TSFs = new String[1];
-        TSFs[0] = "mergedTSF.txt";
-        BackEnd bE = new BackEnd("masterAccounts.txt", "validAccounts.txt", TSFs);
+        // 0 -> MAF 1 -> VAF, 2 -> MergedTSF
+        BackEnd bE = new BackEnd(args[0], args[1], args[2]);
         bE.printStatementArray();
     }
 //    public static void main(String[] args) {
@@ -23,3 +22,4 @@ public class BackEndStartPoint {
 //        BackEnd backEnd = new BackEnd(args[0], args[1], tsfNames);
 //    }
 }
+
