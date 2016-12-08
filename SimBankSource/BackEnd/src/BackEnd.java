@@ -154,7 +154,8 @@ public class BackEnd {
     private boolean lengthExceptionCheck(String field, int length, String exception) {
         if (field.equals(exception))
             return true;
-        if (field.length() != length || field.charAt(0) == 0)
+        int len = field.length();
+        if (len > 8  || len < length || field.charAt(0) == '0')
             return false;
         else
             return true;
@@ -232,8 +233,8 @@ public class BackEnd {
             return false;
         }
         String[] parts = masterAccountsList.get(index).split(" ", 3);
+        System.out.printf("Part 0: %s, Part 1: %s, PArt 2: %s", parts[0], parts[1], parts[2]);
         if (Integer.valueOf(parts[1]) - Integer.valueOf(amount) < 0) {
-            System.out.println(parts[1]);
             printFailedConstraint("Transaction would result in negative account balance.");
             return false;
         }
@@ -327,7 +328,7 @@ public class BackEnd {
     }
 
     // Performs the withdraw operation and deposit operation on the appropriate accounts.
-    private void transferOperation(String toAccNum, String fromAccNum, String amount) {
+    private void transferOperation(String fromAccNum, String toAccNum, String amount) {
         withdrawOperation(fromAccNum, amount);
         depositOperation(toAccNum, amount);
     }
@@ -347,7 +348,7 @@ public class BackEnd {
         Collections.sort(masterAccountsList, new Comparator<String>() {
             @Override
             public int compare(String line1, String line2) {
-                return  line2.compareTo(line1);
+                return  line1.compareTo(line2);
             }
         });
         writeOutOfArray("new_" + masterAccName, masterAccountsList);
@@ -362,7 +363,7 @@ public class BackEnd {
             accNum = line.substring(0, 8);
             validAccounts.add(accNum);
         }
-        writeOutOfArray(validAccountsName, validAccounts);
+        writeOutOfArray("new_" + validAccountsName, validAccounts);
     }
 
     // Writes the contents of the supplied arrayList to the supplied fileName
@@ -370,7 +371,8 @@ public class BackEnd {
         try {
             BufferedWriter writer = new BufferedWriter( new FileWriter(fileName) );
             for (String line : list) {
-                writer.write(line + "\n");
+                writer.write(line);
+                writer.newLine();
             }
             writer.close();
         } catch (IOException e) {

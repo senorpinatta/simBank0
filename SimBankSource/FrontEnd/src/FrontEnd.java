@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class FrontEnd {
     // The end of service line as a constant
-    private static final String EOSLine = "ES 00000000 00000000 000 ***\n";
+    private static final String EOSLine = "ES 00000000 00000000 000 ***";
     // An object representation of the State of the program
     CommandManager commMan;
     // A list of valid accounts
@@ -116,9 +116,12 @@ public class FrontEnd {
         try {
             FileWriter fileWriter = new FileWriter(TSFile);
             BufferedWriter writer = new BufferedWriter(fileWriter);
-            for (String line : temporaryTransactions)
-                writer.write(line + "\n");
+            for (String line : masterTransactions) {
+                writer.write(line);
+                writer.newLine();
+            }
             writer.write(EOSLine);
+            writer.newLine();
             writer.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());

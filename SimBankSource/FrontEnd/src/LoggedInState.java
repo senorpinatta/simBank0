@@ -85,7 +85,7 @@ public class LoggedInState extends CommandManager {
             System.out.println("Error");
             return 0;
         }
-        transactions.add(String.format("DE %d 00000000 %d ***", accountNumber, amount));
+        transactions.add(String.format("DE %d 00000000 %03d ***", accountNumber, amount));
         return 0;
     }
 
@@ -120,7 +120,7 @@ public class LoggedInState extends CommandManager {
         } catch (NumberFormatException e) {
             return 0;
         }
-        transactions.add(String.format("WD %d 00000000 %d ***", accountNumber, amount));
+        transactions.add(String.format("WD %d 00000000 %03d ***", accountNumber, amount));
         return 0;
     }
 
@@ -176,7 +176,7 @@ public class LoggedInState extends CommandManager {
             System.out.println("Error");
             return 0;
         }
-        transactions.add(String.format("TR %d %d %d ***", accountNumberFrom, accountNumberTo, amount));
+        transactions.add(String.format("TR %d %d %03d ***", accountNumberTo, accountNumberFrom, amount));
         return 0;
     }
 
