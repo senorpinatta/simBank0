@@ -1,0 +1,7 @@
+login
+atm
+deposit
+10000002
+0
+logout
+Terminate

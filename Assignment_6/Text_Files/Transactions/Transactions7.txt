@@ -1,0 +1,7 @@
+login
+atm
+withdraw
+10000000
+100000
+logout
+Terminate

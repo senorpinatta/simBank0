@@ -1,0 +1,8 @@
+login
+agent
+transfer
+10000001
+10000002
+989999
+logout
+Terminate
