@@ -10,7 +10,6 @@ public class BackEndStartPoint {
     public static void main(String[] args) {
         // 0 -> MAF 1 -> VAF, 2 -> MergedTSF
         BackEnd bE = new BackEnd(args[0], args[1], args[2]);
-        bE.printStatementArray();
     }
 //    public static void main(String[] args) {
 //        // takes any number of command line arguments >= 3 reads the 3rd and up into a String[]

@@ -1,0 +1,141 @@
+Starting Week 3
+——Starting Day: 1——
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+Enter the account Number: 
+You entered: 10000000 Account is valid
+Enter the account Name: 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+Enter the account Number: 
+You entered: 10000001 Account is valid
+Enter the account Name: 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+Enter the account Number: 
+You entered: 10000002 Account is valid
+Enter the account Name: 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+——Starting Day: 2——
+         Please Login -> 
+  Select atm or agent -> 
+                  ATM -> 
+ Enter account Number -> 
+Enter amount in cents -> 
+                  ATM -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+ Enter account Number -> 
+Enter amount in cents -> 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                  ATM -> 
+ Enter account Number -> 
+Enter amount in cents -> 
+                  ATM -> 
+         Please Login -> 
+Front end Terminated
+——Starting Day: 3——
+         Please Login -> 
+  Select atm or agent -> 
+                  ATM -> 
+ Enter account Number -> 
+Enter amount in cents -> 
+                  ATM -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+ Enter account Number -> 
+Enter amount in cents -> 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+Error
+  Select atm or agent -> 
+                  ATM -> 
+                  ATM -> 
+ Enter account Number -> 
+Enter amount in cents -> 
+                  ATM -> 
+                  ATM -> 
+                  ATM -> 
+         Please Login -> 
+Front end Terminated
+——Starting Day: 4——
+         Please Login -> 
+  Select atm or agent -> 
+                  ATM -> 
+Enter the account Number to withdraw from: 
+Enter the account Number to deposit to: 
+Enter amount in cents -> 
+Error total amount is not in [0, 100000]
+                  ATM -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+Enter the account Number to withdraw from: 
+Enter the account Number to deposit to: 
+Enter amount in cents -> 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+Enter the account Number to withdraw from: 
+Enter the account Number to deposit to: 
+Enter amount in cents -> 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+Failed constraint: Transaction would result in negative account balance.
+——Starting Day: 5——
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+Enter the account Number: 
+Enter the account Name: 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+Enter the account Number: 
+Enter the account Name: 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+         Please Login -> 
+  Select atm or agent -> 
+                Agent -> 
+Enter the account Number: 
+Enter the account Name: 
+                Agent -> 
+         Please Login -> 
+Front end Terminated
+Failed constraint: Account Name != Account Number
+Failed constraint: Account not empty

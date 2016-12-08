@@ -30,6 +30,7 @@ public class BackEnd {
     //If both conditions are met it performs the operation.
     //Writes results of completed transactions to new_ + masterAccFileName and the list of valid accounts to validAccountsFileName
     public BackEnd(String masterAccFileName, String validAccountsFileName, String mergedTSFileName) {
+
         // coverage part
         statementCounter = new int[STATEMENT_NUM];
         // end of coverage part
@@ -134,7 +135,6 @@ public class BackEnd {
                 part = parts[i];
                 if (i < 3) {
                     if (! lengthExceptionCheck(part, 8, "00000000")) {
-                        System.out.println("here");
                         return false;
                     }
                 }
@@ -218,7 +218,7 @@ public class BackEnd {
             printFailedConstraint("Account not empty");
             return false;
         }
-        if (!(parts[0].equals(parts[2]))) {
+        if (!(parts[2].equals(accName))) {
             printFailedConstraint("Account Name != Account Number");
             return false;
         }
@@ -233,8 +233,7 @@ public class BackEnd {
             return false;
         }
         String[] parts = masterAccountsList.get(index).split(" ", 3);
-        System.out.printf("Part 0: %s, Part 1: %s, PArt 2: %s", parts[0], parts[1], parts[2]);
-        if (Integer.valueOf(parts[1]) - Integer.valueOf(amount) < 0) {
+        if ((Integer.valueOf(parts[1]) - Integer.valueOf(amount)) < 0) {
             printFailedConstraint("Transaction would result in negative account balance.");
             return false;
         }
@@ -271,6 +270,7 @@ public class BackEnd {
             accNum = line.substring(0, 8);
             if (accNum.equals(targetAccNum))
                 return counter;
+            counter++;
         }
         return -1;
     }
@@ -328,7 +328,7 @@ public class BackEnd {
     }
 
     // Performs the withdraw operation and deposit operation on the appropriate accounts.
-    private void transferOperation(String fromAccNum, String toAccNum, String amount) {
+    private void transferOperation(String toAccNum, String fromAccNum, String amount) {
         withdrawOperation(fromAccNum, amount);
         depositOperation(toAccNum, amount);
     }
